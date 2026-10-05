@@ -14,8 +14,7 @@ que têm milhares de vendas. O que mais ajuda a primeira venda sair:
 
 ## HOJE (segunda 05/10)
 
-### 1. Publicar a Cama Pet (5 min)
-ML → Vendas → Anúncios → **Rascunhos** → Cama Pet Impermeável 70x70 → **Anunciar**.
+### 1. ~~Publicar a Cama Pet~~ ✅ FEITO (publicada em 05/10)
 
 ### 2. Pesquisa de preço (15 min, no celular ou PC)
 Busque no ML, ordene por "Mais relevantes" e anote o preço dos 5 primeiros (somando o frete):
