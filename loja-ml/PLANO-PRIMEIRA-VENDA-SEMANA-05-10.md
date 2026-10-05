@@ -101,3 +101,14 @@ Para responder perguntas na hora e ver a venda logo que cair.
 - 07/10: DepDrop, Montink (não), canecas pausadas, endereço trocado
 - 09/10: fim dos testes Montink e DepDrop
 - ~01/11: **pausar campanha de Ads** antes de o bônus acabar
+
+---
+
+## Pesquisa de preço — Protetor KING impermeável (05/10)
+Concorrente direto (mesmo tipo de produto): **DAIFA R$62,90** frete grátis, +1000 vendidos, nota 4.4.
+Outros da 1ª página são marca/premium (Altenburg R$144–165, Emma R$459, Pillow Top R$179) — não são concorrentes diretos.
+Nosso preço era R$64,90 (recebe ~R$39,40, custo R$27,72).
+
+**Decisão: baixar para R$59,90** (R$3 abaixo da DAIFA). Estimativa: recebe ~R$35, lucro ~R$7.
+Conferir o "Você recebe" na tela de edição do ML. Piso: não receber menos que ~R$33.
+Se não vender até quinta: R$57,90.
