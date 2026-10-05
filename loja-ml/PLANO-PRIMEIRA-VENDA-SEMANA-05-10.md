@@ -124,3 +124,18 @@ Se não vender até quinta: R$57,90.
 - Falta: vídeo da Cama Pet (precisa das fotos em tamanho grande).
 - King Matelado: nota de qualidade 66 → 77 (Profissional). Mudado para **R$79,90 com frete grátis** ("Você recebe" > R$52, lucro ~R$8+).
   Ideia: a partir de R$79 o ML dá desconto no frete (reputação verde/Decola). Testar o mesmo no Casal/King/Cama Pet se fizer sentido.
+
+### Decola — desafios (05/10)
+- Desafio 3 (curso de reputação): fazer.
+- Desafio 4 (promoção): bloqueado ("não é possível oferecer promoções") — conta sem vendas / preços mudados hoje. Evitar mexer em preço nos próximos dias.
+- Desafio 5: ver qual é.
+- Desafio 6 (Envios Flex): NÃO ativar — dropshipping de Ibitinga não entrega no mesmo dia.
+
+### Pendências para vender esta semana (fim do dia 05/10)
+1. Cama Pet: testar R$79,90 com frete grátis (como o King Matelado); salvar se "Você recebe" ≥ R$47.
+2. Ads: ROAS 2x; deixar só King, Casal, King Matelado, Cama Pet.
+3. Ver se o King passou a "Ganhando" no catálogo a R$46,90.
+4. Fichas técnicas completas (King Matelado, Cama Pet).
+5. Vídeo da Cama Pet (mandar fotos grandes).
+6. Endereço de envio/devolução: resolver ANTES da 1ª venda (ligar MQD 06/10).
+7. Criar Kit 4 travesseiro matelado (MR 6605).
