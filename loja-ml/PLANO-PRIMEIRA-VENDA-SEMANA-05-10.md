@@ -139,3 +139,9 @@ Se não vender até quinta: R$57,90.
 5. Vídeo da Cama Pet (mandar fotos grandes).
 6. Endereço de envio/devolução: resolver ANTES da 1ª venda (ligar MQD 06/10).
 7. Criar Kit 4 travesseiro matelado (MR 6605).
+
+### Decisão (05/10): SAIR DA MONTINK
+- Não assinar a Montink. Pausar/finalizar todos os anúncios de canecas.
+- Cancelar o teste na Montink (para não cobrar R$149 em 09/10) e desconectar o app da Montink no ML.
+- Trocar endereço de envio e devolução do CD Montink (Duque de Caxias/RJ) para o endereço de SP
+  (Rua Francisco Barriga de Souza, 344) até a MQD confirmar se pode usar o CD de Ibitinga.
