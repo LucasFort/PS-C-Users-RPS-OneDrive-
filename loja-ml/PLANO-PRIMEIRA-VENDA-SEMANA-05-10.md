@@ -119,3 +119,6 @@ Se não vender até quinta: R$57,90.
 - King mudado para **frete por conta do comprador** e **R$46,90** (R$1 abaixo) para tentar ganhar o catálogo.
 - Piso: "Você recebe" ≥ R$31. Não entrar em guerra de preço abaixo disso.
 - Mercado Ads: ROAS objetivo baixado de 5x para 3x (estava com 0 cliques). Sugerido 2x.
+- King Matelado e Cama Pet: decidido NÃO entrar no catálogo (nenhuma opção correspondia exatamente; risco de reclamação/multa Decola).
+- Vídeo novo do King Matelado (`videos/video-colchao-matelado.mp4`, feito de miniaturas 140px) enviado ao ML em 05/10 — **em revisão**.
+- Falta: vídeo da Cama Pet (precisa das fotos em tamanho grande).
