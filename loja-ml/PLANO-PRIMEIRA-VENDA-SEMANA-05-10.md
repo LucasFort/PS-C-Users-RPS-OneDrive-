@@ -122,3 +122,5 @@ Se não vender até quinta: R$57,90.
 - King Matelado e Cama Pet: decidido NÃO entrar no catálogo (nenhuma opção correspondia exatamente; risco de reclamação/multa Decola).
 - Vídeo novo do King Matelado (`videos/video-colchao-matelado.mp4`, feito de miniaturas 140px) enviado ao ML em 05/10 — **em revisão**.
 - Falta: vídeo da Cama Pet (precisa das fotos em tamanho grande).
+- King Matelado: nota de qualidade 66 → 77 (Profissional). Mudado para **R$79,90 com frete grátis** ("Você recebe" > R$52, lucro ~R$8+).
+  Ideia: a partir de R$79 o ML dá desconto no frete (reputação verde/Decola). Testar o mesmo no Casal/King/Cama Pet se fizer sentido.
