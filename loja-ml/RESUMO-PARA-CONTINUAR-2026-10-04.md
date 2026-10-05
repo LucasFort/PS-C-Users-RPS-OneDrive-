@@ -28,7 +28,8 @@ Cole isto para o Claude na outra máquina:
 - 4 canecas novas (Professor, Enfermeiro, Psicólogo, Advogado) aparecem como **"Anúncio finalizado"** no ML (não passaram na verificação de foto). Não reativar se a Montink não for assinada.
 
 ## Atualizações
-- 05/10: **Cama Pet PUBLICADA** (ver abaixo).
+- 05/10: **Cama Pet PUBLICADA** (ver abaixo) e **adicionada à campanha do Mercado Ads**.
+- Caminho do Ads no PC: Minha conta → Central de vendedores → Publicidade → Product Ads.
 
 ## Rascunho NÃO publicado (já publicado em 05/10)
 - **Cama Pet Impermeável 70x70** (Comfortpet "Cama Pet Atacadão Extra Grande", custo R$37), variações Azul e Rosa, R$69,90 Premium, recebe R$47,42 (~R$10,40). Ficou pronto na tela "Anunciar" — falta clicar em **Anunciar** (deve estar nos rascunhos do ML).
