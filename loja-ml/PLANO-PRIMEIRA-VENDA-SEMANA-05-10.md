@@ -112,3 +112,10 @@ Nosso preço era R$64,90 (recebe ~R$39,40, custo R$27,72).
 **Decisão: baixar para R$59,90** (R$3 abaixo da DAIFA). Estimativa: recebe ~R$35, lucro ~R$7.
 Conferir o "Você recebe" na tela de edição do ML. Piso: não receber menos que ~R$33.
 Se não vender até quinta: R$57,90.
+
+### Atualização (05/10, tarde) — King está no CATÁLOGO
+- Anúncio de catálogo #7748146092 (sincronizado com #5333104037). Concorrente no catálogo: **HOMEFERNANDES**
+  (mesmo produto MR, R$47,90, Premium, frete por conta do comprador, 100 un.) estava ganhando 100% das visitas.
+- King mudado para **frete por conta do comprador** e **R$46,90** (R$1 abaixo) para tentar ganhar o catálogo.
+- Piso: "Você recebe" ≥ R$31. Não entrar em guerra de preço abaixo disso.
+- Mercado Ads: ROAS objetivo baixado de 5x para 3x (estava com 0 cliques). Sugerido 2x.
