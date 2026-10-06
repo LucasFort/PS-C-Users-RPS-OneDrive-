@@ -40,7 +40,8 @@ TAREFAS, nesta ordem:
    - Lembrar de pausar a campanha por volta de 30/10–01/11.
 
 6. NOVOS ANÚNCIOS (meta 15–20 anúncios):
-   - Na DepDrop (MR Enxovais, Comfortpet, Kaizen), achar produtos com lucro ≥ R$8 no ML. Prioridade:
+   - Na DepDrop (Explorar Produtos), filtrar por MR Enxovais, Comfortpet e Kaizen e ordenar por MAIS VENDIDOS / mais populares (se não houver esse filtro, perguntar ao suporte DepDrop quais são os mais vendidos de cada fornecedor). Fazer uma lista dos 10 mais vendidos com custo, estoque e se tem vídeo.
+   - Desses, escolher os que dão lucro ≥ R$8 no ML. Prioridade inicial (se estiverem entre os mais vendidos):
      a) Tapete higiênico pet (Comfortpet, custo ~R$25 → ~R$49,90)
      b) Kit 4 protetor travesseiro MATELADO (MR SKU 6605, ~R$59,90)
      c) Protetor de colchão solteiro (MR)
