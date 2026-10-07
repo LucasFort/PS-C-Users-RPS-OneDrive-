@@ -76,3 +76,5 @@ Cole isto para o Claude no outro PC:
 - Lição: o prazo do ML (venda 20h → postar no dia seguinte 14h) é mais curto que o do fornecedor (pedidos até 10h30 saem até 16h).
   → Aumentar o **prazo de disponibilidade para 2 dias** nos anúncios de dropshipping.
 - Não cancelar. Avisar a compradora com mensagem gentil para evitar reclamação (que seria outra "venda afetada").
+- ✅ ATUALIZAÇÃO 07/10 tarde: venda #2000015390558725 está **"A caminho"**, previsão de entrega **sexta 09/10**. ML mostra "Não afeta sua reputação".
+- Próximo: trocar endereço de envio/devolução (sair do CD Montink RJ); após entrega (09/10), mandar mensagem pedindo avaliação.
