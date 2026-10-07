@@ -63,3 +63,10 @@ Cole isto para o Claude no outro PC:
 ## Regras que seguimos
 - Sempre confirmar com o usuário antes de publicar, pagar, mandar mensagem ou emitir documento.
 - Nunca usar vídeo montado com fotos; não usar fotos que enganem o tamanho (ex.: cachorro grande na cama 70x70).
+
+## Atualização 07/10 — Mercado Ads
+- Métricas até 07/10: 205 impressões, 6 cliques (~R$1,26/clique), 1 venda (Cama Pet), ROAS 10,55x, ACOS 9,5%, investimento R$7,57 (orçamento todo gasto).
+- **Orçamento aumentado para R$12/dia em 07/10** (aprendizagem reiniciou: 7 dias). Bônus deve acabar ~27/10 → **pausar campanha ~25/10**.
+- Reavaliar em 3–4 dias: nova venda → pode ir a R$15; nenhuma → voltar a R$8.
+- Com dinheiro próprio, só manter Ads se ACOS < ~12% em várias vendas (lucro ~R$9–11 por venda).
+- Conferir se canecas e Kit 4 travesseiro estão pausados dentro da campanha (13 anúncios patrocinados).
