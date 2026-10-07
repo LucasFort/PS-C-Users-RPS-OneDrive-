@@ -70,3 +70,9 @@ Cole isto para o Claude no outro PC:
 - Reavaliar em 3–4 dias: nova venda → pode ir a R$15; nenhuma → voltar a R$8.
 - Com dinheiro próprio, só manter Ads se ACOS < ~12% em várias vendas (lucro ~R$9–11 por venda).
 - Conferir se canecas e Kit 4 travesseiro estão pausados dentro da campanha (13 anúncios patrocinados).
+
+## Atualização 07/10 — 1ª venda provavelmente atrasa
+- Fornecedor (contato direto recebido em 07/10) provavelmente não posta até 14h → possível multa Decola R$50.
+- Lição: o prazo do ML (venda 20h → postar no dia seguinte 14h) é mais curto que o do fornecedor (pedidos até 10h30 saem até 16h).
+  → Aumentar o **prazo de disponibilidade para 2 dias** nos anúncios de dropshipping.
+- Não cancelar. Avisar a compradora com mensagem gentil para evitar reclamação (que seria outra "venda afetada").
