@@ -52,10 +52,10 @@ for i in "${!ITENS[@]}"; do
 
   # movimento da foto (alterna entre 4 tipos)
   case $(( i % 4 )) in
-    0) Z="1+0.15*on/$FR";            X="iw/2-(iw/zoom/2)";               Y="ih/2-(ih/zoom/2)" ;;  # aproxima
-    1) Z="1.15-0.15*on/$FR";         X="iw/2-(iw/zoom/2)";               Y="ih/2-(ih/zoom/2)" ;;  # afasta
-    2) Z="1.15";                     X="(iw-iw/zoom)*on/$FR";            Y="ih/2-(ih/zoom/2)" ;;  # pan →
-    3) Z="1.15";                     X="iw/2-(iw/zoom/2)";               Y="(ih-ih/zoom)*(1-on/$FR)" ;; # pan ↑
+    0) Z="1+0.08*on/$FR";            X="iw/2-(iw/zoom/2)";               Y="ih/2-(ih/zoom/2)" ;;  # aproxima
+    1) Z="1.08-0.08*on/$FR";         X="iw/2-(iw/zoom/2)";               Y="ih/2-(ih/zoom/2)" ;;  # afasta
+    2) Z="1.06";                     X="(iw-iw/zoom)*on/$FR";            Y="ih/2-(ih/zoom/2)" ;;  # pan →
+    3) Z="1.06";                     X="iw/2-(iw/zoom/2)";               Y="(ih-ih/zoom)*(1-on/$FR)" ;; # pan ↑
   esac
   # entrada: desliza do lado direito/esquerdo com desaceleração, depois flutua levemente
   if (( i % 2 )); then SIDE=-1; else SIDE=1; fi
