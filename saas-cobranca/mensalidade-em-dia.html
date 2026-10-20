@@ -1,0 +1,466 @@
+<title>Mensalidade em Dia</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..900&family=Figtree:wght@400;500;600;700&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+/* Layout: app de celular em coluna única (máx. 560px), cabeçalho fixo no topo e abas fixas embaixo, como um app de verdade. */
+:root{
+  --bg:#F2F5F0; --surface:#FFFFFF; --ink:#15211A; --muted:#5D6A62; --line:#DAE2DB;
+  --accent:#1E7449; --accent-ink:#FFFFFF; --accent-soft:#E2F0E7;
+  --ok:#1C8350; --ok-bg:#E0F2E7; --warn:#A66A12; --warn-bg:#FBF0DA; --bad:#BC3B28; --bad-bg:#FBE5E0;
+  --chat:#E9E3D9; --bubble:#D9F7C8; --bubble-ink:#14201A; --qr:#FFFFFF; --shade:rgba(10,20,14,.45);
+  --f-display:"Archivo","Arial Narrow",system-ui,sans-serif;
+  --f-body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --r:14px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0E1511; --surface:#16201A; --ink:#E5ECE7; --muted:#93A198; --line:#26332B;
+  --accent:#4FC68C; --accent-ink:#08170F; --accent-soft:#183326;
+  --ok:#55CC8F; --ok-bg:#163423; --warn:#E6B350; --warn-bg:#352A12; --bad:#F27D66; --bad-bg:#3A1C16;
+  --chat:#0B141A; --bubble:#1D4A37; --bubble-ink:#E8F2EC; --qr:#FFFFFF; --shade:rgba(0,0,0,.6); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0E1511; --surface:#16201A; --ink:#E5ECE7; --muted:#93A198; --line:#26332B;
+  --accent:#4FC68C; --accent-ink:#08170F; --accent-soft:#183326;
+  --ok:#55CC8F; --ok-bg:#163423; --warn:#E6B350; --warn-bg:#352A12; --bad:#F27D66; --bad-bg:#3A1C16;
+  --chat:#0B141A; --bubble:#1D4A37; --bubble-ink:#E8F2EC; --qr:#FFFFFF; --shade:rgba(0,0,0,.6); color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.num{font-variant-numeric:tabular-nums}
+
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.wrap{max-width:560px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:12px}
+.brand{display:flex;flex-direction:column;min-width:0}
+.brand small{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.brand strong{font-family:var(--f-display);font-stretch:85%;font-weight:800;font-size:19px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.demo-tag{flex:none;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--warn);background:var(--warn-bg);padding:4px 8px;border-radius:999px}
+
+main.wrap{padding-block:18px calc(96px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:18px}
+h1,h2,h3{font-family:var(--f-display);font-stretch:85%;margin:0;text-wrap:balance}
+h1{font-size:28px;font-weight:800;line-height:1.1}
+h2{font-size:19px;font-weight:800}
+.eyebrow{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.sub{color:var(--muted);margin:4px 0 0}
+
+/* Placar do mês */
+.score{background:var(--accent);color:var(--accent-ink);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:14px}
+.score .eyebrow{color:inherit;opacity:.8}
+.score .big{font-family:var(--f-display);font-stretch:75%;font-weight:900;font-size:44px;line-height:1}
+.score .of{opacity:.85;font-weight:600}
+.bar{height:10px;border-radius:999px;background:rgba(255,255,255,.25);overflow:hidden}
+.bar i{display:block;height:100%;background:currentColor;border-radius:999px;transition:width .4s}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.tile b{font-family:var(--f-display);font-stretch:80%;font-weight:800;font-size:20px}
+.tile span{font-size:12px;color:var(--muted)}
+.tile.bad b{color:var(--bad)} .tile.warn b{color:var(--warn)} .tile.ok b{color:var(--ok)}
+
+.section{display:flex;flex-direction:column;gap:10px}
+.section-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.link{background:none;border:0;color:var(--accent);font-weight:700;padding:0}
+
+/* Lista de alunos */
+.list{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.row{display:flex;align-items:center;gap:12px;padding:12px 14px;border-top:1px solid var(--line);width:100%;background:none;border-left:0;border-right:0;border-bottom:0;text-align:left}
+.row:first-child{border-top:0}
+.avatar{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-family:var(--f-display);font-weight:800;font-size:14px;background:var(--accent-soft);color:var(--accent)}
+.who{flex:1;min-width:0;display:flex;flex-direction:column}
+.who b{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.who span{font-size:13px;color:var(--muted)}
+.right{flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.right b{font-weight:700;font-size:14px}
+.pill{font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px;white-space:nowrap}
+.pill.pago{color:var(--ok);background:var(--ok-bg)}
+.pill.atrasado{color:var(--bad);background:var(--bad-bg)}
+.pill.vence{color:var(--warn);background:var(--warn-bg)}
+.pill.aberto{color:var(--muted);background:var(--bg)}
+.empty{padding:22px 16px;text-align:center;color:var(--muted)}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:12px;padding:12px 16px;font-weight:700;border:1px solid transparent;text-decoration:none}
+.btn.primary{background:var(--accent);color:var(--accent-ink)}
+.btn.ghost{background:var(--surface);border-color:var(--line);color:var(--ink)}
+.btn.danger{background:var(--bad-bg);color:var(--bad)}
+.btn.wa{background:#1FA855;color:#fff}
+.btn.block{width:100%}
+.btn.sm{padding:8px 12px;font-size:13px;border-radius:10px}
+.btn svg{width:18px;height:18px;flex:none}
+
+.toolbar{display:flex;gap:8px;flex-wrap:wrap}
+.search{flex:1;min-width:0;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:11px 14px}
+.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
+.chip{flex:none;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:600;color:var(--muted)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+
+/* Abas */
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+.tabs .wrap{display:grid;grid-template-columns:repeat(5,1fr)}
+.tab{background:none;border:0;padding:9px 2px 10px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;font-weight:600;color:var(--muted)}
+.tab svg{width:22px;height:22px}
+.tab[aria-current="page"]{color:var(--accent)}
+
+/* Folha (modal) */
+.sheet-bg{position:fixed;inset:0;z-index:40;background:var(--shade);display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--surface);width:100%;max-width:560px;max-height:92%;overflow:auto;border-radius:20px 20px 0 0;padding:18px max(16px,env(safe-area-inset-right,0px)) calc(20px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:14px}
+.sheet-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.x{background:var(--bg);border:0;border-radius:50%;width:34px;height:34px;flex:none;font-size:18px;line-height:1}
+.chat{background:var(--chat);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:8px}
+.chat-to{font-size:12px;color:var(--muted);text-align:center}
+.bubble{align-self:flex-end;max-width:92%;background:var(--bubble);color:var(--bubble-ink);border-radius:10px 2px 10px 10px;padding:9px 11px;font-size:14px;white-space:pre-wrap;overflow-wrap:anywhere;box-shadow:0 1px 1px rgba(0,0,0,.12)}
+.bubble .pix{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;opacity:.85}
+.qrbox{display:flex;gap:14px;align-items:center;background:var(--bg);border-radius:12px;padding:12px}
+.qr{flex:none;background:var(--qr);padding:8px;border-radius:8px;width:136px;height:136px}
+.qr img,.qr canvas{width:120px!important;height:120px!important;display:block}
+.qrbox p{margin:0;font-size:13px;color:var(--muted)}
+.actions{display:grid;gap:8px}
+.actions.two{grid-template-columns:1fr 1fr}
+.note{font-size:13px;color:var(--muted);background:var(--bg);border-radius:10px;padding:10px 12px;margin:0}
+.note b{color:var(--ink)}
+
+form{display:flex;flex-direction:column;gap:12px}
+label{display:flex;flex-direction:column;gap:5px;font-size:13px;font-weight:600;color:var(--muted)}
+.field{border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:11px 12px;color:var(--ink);font-weight:500;width:100%}
+textarea.field{min-height:120px;resize:vertical;font-size:14px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.hint{font-weight:400;font-size:12px}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:10px}
+.log-item{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-top:1px solid var(--line)}
+.log-item:first-child{border-top:0}
+.dot{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:800}
+.dot.cobranca{background:var(--warn-bg);color:var(--warn)}
+.dot.recibo{background:var(--ok-bg);color:var(--ok)}
+.log-item p{margin:0;font-size:14px}
+.log-item small{color:var(--muted);font-size:12px}
+
+.plans{display:flex;flex-direction:column;gap:12px}
+.plan{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:8px}
+.plan.star{border:2px solid var(--accent)}
+.plan-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.price{font-family:var(--f-display);font-stretch:75%;font-weight:900;font-size:32px}
+.price small{font-family:var(--f-body);font-size:13px;font-weight:600;color:var(--muted)}
+.plan ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:3px;font-size:14px}
+.badge{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-ink);background:var(--accent);padding:3px 8px;border-radius:999px}
+.calc-out{font-family:var(--f-display);font-stretch:75%;font-weight:900;font-size:38px;color:var(--bad);line-height:1}
+
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:60;background:var(--ink);color:var(--bg);padding:12px 16px;border-radius:12px;font-weight:600;font-size:14px;max-width:calc(100% - 32px);box-shadow:0 6px 24px rgba(0,0,0,.25)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (min-width:600px){.sheet-bg{align-items:center}.sheet{border-radius:20px}}
+</style>
+
+<header class="top"><div class="wrap">
+  <div class="brand"><small>Mensalidade em Dia</small><strong id="escolaNome">Escolinha</strong></div>
+  <span class="demo-tag">Demonstração</span>
+</div></header>
+
+<main class="wrap" id="view"></main>
+
+<nav class="tabs" aria-label="Seções"><div class="wrap" id="tabs"></div></nav>
+<div id="sheetRoot"></div>
+<div id="toastRoot"></div>
+
+<script>
+(function(){
+"use strict";
+var KEY="mensalidade-em-dia-v1";
+var MESES=["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"];
+var ICON={
+  painel:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg>',
+  alunos:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"/><circle cx="17.5" cy="9" r="2.5"/><path d="M17 14.6c2.3.2 4 1.8 4.5 4.4"/></svg>',
+  envios:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 4 3 11l7 2.5L12.5 21z"/><path d="m10 13.5 5-5"/></svg>',
+  planos:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 6.5c-.8-1.5-2.6-2.5-5-2.5-3 0-4.5 1.6-4.5 3.5 0 4.6 10 2.4 10 7.5 0 2-1.8 3.5-5 3.5-2.6 0-4.4-1-5.3-2.7"/></svg>',
+  ajustes:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>',
+  wa:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2c0 1.3.9 2.5 1.1 2.7.1.2 1.8 2.8 4.4 3.9 1.6.7 2.3.8 3.1.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3Z"/></svg>'
+};
+var TABS=[["painel","Painel"],["alunos","Alunos"],["envios","Envios"],["planos","Planos"],["ajustes","Ajustes"]];
+
+/* ---------- utilidades ---------- */
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+function brl(v){return Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"})}
+function now(){return new Date()}
+function mesKey(d){d=d||now();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")}
+function mesNome(d){d=d||now();return MESES[d.getMonth()]}
+function ultimoDia(){var d=now();return new Date(d.getFullYear(),d.getMonth()+1,0).getDate()}
+function venc(a){return Math.min(Number(a.dia)||1,ultimoDia())}
+function dataVenc(a){var d=now();return String(venc(a)).padStart(2,"0")+"/"+String(d.getMonth()+1).padStart(2,"0")}
+function iniciais(n){var p=String(n).trim().split(/\s+/);return ((p[0]||"")[0]||"").toUpperCase()+((p.length>1?p[p.length-1][0]:"")||"").toUpperCase()}
+function primeiroNome(n){return String(n||"").trim().split(/\s+/)[0]||""}
+function uid(){return Math.random().toString(36).slice(2,9)}
+function hora(ts){var d=new Date(ts);return d.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit"})+" às "+d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})}
+
+function status(a){
+  if(a.pagamentos&&a.pagamentos[mesKey()]) return {k:"pago",t:"Pago"};
+  var hoje=now().getDate(), v=venc(a);
+  if(hoje>v){var d=hoje-v;return {k:"atrasado",t:d+(d===1?" dia":" dias")+" de atraso",dias:d}}
+  if(v===hoje) return {k:"vence",t:"Vence hoje"};
+  if(v-hoje<=3) return {k:"vence",t:"Vence em "+(v-hoje)+(v-hoje===1?" dia":" dias")};
+  return {k:"aberto",t:"Vence dia "+v};
+}
+
+/* ---------- Pix copia e cola (BR Code estático, padrão do Banco Central) ---------- */
+function tlv(id,v){return id+String(v.length).padStart(2,"0")+v}
+function limpa(s){return String(s||"").normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^A-Za-z0-9 .\-]/g,"").trim()}
+function crc16(s){var c=0xFFFF;for(var i=0;i<s.length;i++){c^=s.charCodeAt(i)<<8;for(var j=0;j<8;j++){c=(c&0x8000)?((c<<1)^0x1021):(c<<1);c&=0xFFFF}}return c.toString(16).toUpperCase().padStart(4,"0")}
+function pixCode(o){
+  var tx=String(o.txid||"").replace(/[^A-Za-z0-9]/g,"").slice(0,25)||"***";
+  var p=tlv("00","01")+tlv("26",tlv("00","br.gov.bcb.pix")+tlv("01",String(o.chave).trim()))+tlv("52","0000")+tlv("53","986")
+    +(o.valor?tlv("54",Number(o.valor).toFixed(2)):"")+tlv("58","BR")
+    +tlv("59",(limpa(o.nome).slice(0,25)||"RECEBEDOR"))+tlv("60",(limpa(o.cidade).slice(0,15)||"SAO PAULO"))
+    +tlv("62",tlv("05",tx))+"6304";
+  return p+crc16(p);
+}
+window.__pix={pixCode:pixCode,crc16:crc16};
+
+/* ---------- dados ---------- */
+var MODELOS={
+  cobranca:"Olá, {responsavel}! 👋\nA mensalidade de {aluno} na {escola} referente a {mes} ({valor}) vence em {vencimento}.\n\nPara pagar, use o Pix copia e cola:\n{pix}\n\nQualquer dúvida é só responder aqui. Obrigado!",
+  atraso:"Olá, {responsavel}, tudo bem?\nA mensalidade de {aluno} referente a {mes} ({valor}) venceu em {vencimento} e ainda não aparece como paga aqui.\n\nPix copia e cola:\n{pix}\n\nSe você já pagou, pode desconsiderar. Obrigado!",
+  recibo:"Pagamento confirmado ✅\nRecebemos {valor} da mensalidade de {aluno} referente a {mes}. Obrigado, {responsavel}!"
+};
+function seed(){
+  var hoje=now().getDate(), mk=mesKey();
+  function atr(n){return Math.max(1,hoje-n)} function prox(n){return Math.min(28,hoje+n)}
+  var base=[
+    ["Miguel Santos","Patrícia Santos","Sub-9",150,5,true],
+    ["Arthur Oliveira","Ricardo Oliveira","Sub-11",150,atr(6),false],
+    ["Helena Costa","Juliana Costa","Sub-7",120,5,true],
+    ["Davi Lima","Fernanda Lima","Sub-13",180,atr(11),false],
+    ["Gael Ribeiro","Marcos Ribeiro","Sub-9",150,prox(1),false],
+    ["Theo Almeida","Camila Almeida","Sub-11",150,10,true],
+    ["Bernardo Souza","Aline Souza","Sub-13",180,prox(6),false],
+    ["Heitor Pereira","Rodrigo Pereira","Sub-7",120,atr(2),false],
+    ["Lorenzo Martins","Vanessa Martins","Sub-9",150,10,true],
+    ["Samuel Rocha","Daniela Rocha","Sub-11",150,10,true],
+    ["Valentina Gomes","Priscila Gomes","Sub-13",180,prox(9),false],
+    ["Benício Carvalho","Thiago Carvalho","Sub-7",120,5,true]
+  ];
+  var t=Date.now(), alunos=[], log=[];
+  base.forEach(function(b,i){
+    var a={id:uid(),nome:b[0],responsavel:b[1],whats:"(11) 98765-43"+String(10+i),turma:b[2],valor:b[3],dia:b[4],pagamentos:{}};
+    if(b[5]){var ts=t-(i+1)*36e5*7;a.pagamentos[mk]={em:ts,via:"Pix"};log.push({ts:ts,tipo:"recibo",aluno:a.nome,txt:"Recibo enviado · "+brl(a.valor)})}
+    alunos.push(a);
+  });
+  log.push({ts:t-36e5*30,tipo:"cobranca",aluno:"Arthur Oliveira",txt:"Lembrete de vencimento enviado"});
+  log.sort(function(x,y){return y.ts-x.ts});
+  return {config:{escola:"Escolinha Bola de Ouro",recebedor:"Bola de Ouro Esportes",cidade:"São Paulo",chave:"pagamentos@boladeouro.com.br",modelos:JSON.parse(JSON.stringify(MODELOS))},alunos:alunos,log:log};
+}
+var S;
+try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){S=null}
+if(!S||!S.alunos) S=seed();
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+
+var UI={tab:"painel",filtro:"todos",busca:""};
+try{var t0=localStorage.getItem(KEY+":tab");if(t0)UI.tab=t0}catch(e){}
+var h=(location.hash||"").slice(1); if(TABS.some(function(t){return t[0]===h})) UI.tab=h;
+
+/* ---------- mensagens ---------- */
+function pixDe(a){return pixCode({chave:S.config.chave,nome:S.config.recebedor,cidade:S.config.cidade,valor:a.valor,txid:"MENS"+mesKey().replace("-","")+a.id})}
+function preenche(modelo,a){
+  var map={responsavel:primeiroNome(a.responsavel),aluno:primeiroNome(a.nome),escola:S.config.escola,mes:mesNome(),valor:brl(a.valor),vencimento:dataVenc(a),pix:pixDe(a)};
+  return String(modelo).replace(/\{(\w+)\}/g,function(m,k){return k in map?map[k]:m});
+}
+function waLink(a,texto){var d=String(a.whats).replace(/\D/g,"");if(d.length<=11)d="55"+d;return "https://wa.me/"+d+"?text="+encodeURIComponent(texto)}
+
+/* ---------- renderização ---------- */
+var $view=document.getElementById("view");
+function renderTabs(){
+  document.getElementById("tabs").innerHTML=TABS.map(function(t){
+    return '<button class="tab" data-tab="'+t[0]+'"'+(UI.tab===t[0]?' aria-current="page"':"")+'>'+ICON[t[0]]+t[1]+'</button>';
+  }).join("");
+}
+function rowAluno(a){
+  var s=status(a);
+  return '<button class="row" data-aluno="'+a.id+'"><span class="avatar">'+esc(iniciais(a.nome))+'</span>'
+    +'<span class="who"><b>'+esc(a.nome)+'</b><span>'+esc(a.turma)+' · resp. '+esc(primeiroNome(a.responsavel))+'</span></span>'
+    +'<span class="right"><b class="num">'+brl(a.valor)+'</b><span class="pill '+s.k+'">'+esc(s.t)+'</span></span></button>';
+}
+function totais(){
+  var r={rec:0,total:0,atr:0,atrN:0,abr:0,pagos:0};
+  S.alunos.forEach(function(a){var s=status(a);r.total+=Number(a.valor);
+    if(s.k==="pago"){r.rec+=Number(a.valor);r.pagos++} else if(s.k==="atrasado"){r.atr+=Number(a.valor);r.atrN++} else r.abr+=Number(a.valor)});
+  return r;
+}
+function viewPainel(){
+  var t=totais(), pct=t.total?Math.round(t.rec/t.total*100):0;
+  var atrasados=S.alunos.filter(function(a){return status(a).k==="atrasado"}).sort(function(x,y){return status(y).dias-status(x).dias});
+  var logo=S.alunos.filter(function(a){return status(a).k==="vence"});
+  var html='<div><p class="eyebrow">Mensalidades de '+mesNome()+'</p><h1>Olá! Veja como está o mês.</h1></div>'
+   +'<section class="score" aria-label="Recebido no mês"><span class="eyebrow">Já recebido</span>'
+   +'<div><div class="big num">'+brl(t.rec)+'</div><div class="of num">de '+brl(t.total)+' previstos · '+pct+'%</div></div>'
+   +'<div class="bar" role="progressbar" aria-valuenow="'+pct+'" aria-valuemin="0" aria-valuemax="100"><i style="width:'+pct+'%"></i></div></section>'
+   +'<div class="tiles"><div class="tile ok"><b class="num">'+t.pagos+'</b><span>pagaram</span></div>'
+   +'<div class="tile bad"><b class="num">'+brl(t.atr)+'</b><span>'+t.atrN+' em atraso</span></div>'
+   +'<div class="tile warn"><b class="num">'+brl(t.abr)+'</b><span>a vencer</span></div></div>';
+  html+='<section class="section"><div class="section-head"><h2>Em atraso</h2>'+(atrasados.length?'<span class="eyebrow num">'+atrasados.length+' alunos</span>':'')+'</div>';
+  if(atrasados.length){
+    html+='<div class="list">'+atrasados.map(rowAluno).join("")+'</div>'
+      +'<button class="btn primary block" data-act="lote">'+ICON.wa+' Cobrar todos os atrasados ('+atrasados.length+')</button>';
+  } else html+='<div class="list"><p class="empty">Ninguém atrasado este mês. 🎉</p></div>';
+  html+='</section>';
+  if(logo.length) html+='<section class="section"><div class="section-head"><h2>Vencem nos próximos dias</h2></div><div class="list">'+logo.map(rowAluno).join("")+'</div></section>';
+  return html;
+}
+function viewAlunos(){
+  var f=UI.filtro, q=UI.busca.toLowerCase();
+  var lista=S.alunos.filter(function(a){var s=status(a).k;
+    if(f==="pago"&&s!=="pago")return false; if(f==="atrasado"&&s!=="atrasado")return false; if(f==="aberto"&&(s==="pago"||s==="atrasado"))return false;
+    return !q||(a.nome+" "+a.responsavel+" "+a.turma).toLowerCase().indexOf(q)>=0}).sort(function(x,y){return x.nome.localeCompare(y.nome)});
+  var chips=[["todos","Todos"],["atrasado","Atrasados"],["aberto","A vencer"],["pago","Pagos"]];
+  return '<div class="section-head"><div><h1>Alunos</h1><p class="sub num">'+S.alunos.length+' cadastrados</p></div><button class="btn primary sm" data-act="novo">+ Novo aluno</button></div>'
+   +'<div class="toolbar"><input class="search" id="busca" type="search" placeholder="Buscar aluno, responsável ou turma" value="'+esc(UI.busca)+'" aria-label="Buscar"></div>'
+   +'<div class="chips" role="group" aria-label="Filtrar">'+chips.map(function(c){return '<button class="chip" data-filtro="'+c[0]+'" aria-pressed="'+(f===c[0])+'">'+c[1]+'</button>'}).join("")+'</div>'
+   +'<div class="list" id="listaAlunos">'+(lista.length?lista.map(rowAluno).join(""):'<p class="empty">Nenhum aluno encontrado.</p>')+'</div>';
+}
+function viewEnvios(){
+  return '<div><h1>Envios</h1><p class="sub">Tudo que foi mandado para os responsáveis.</p></div>'
+   +'<div class="list">'+(S.log.length?S.log.map(function(l){
+      return '<div class="log-item"><span class="dot '+l.tipo+'">'+(l.tipo==="recibo"?"✓":"R$")+'</span><div><p><b>'+esc(l.aluno)+'</b> · '+esc(l.txt)+'</p><small>'+hora(l.ts)+'</small></div></div>'}).join(""):'<p class="empty">Nenhum envio ainda.</p>')+'</div>';
+}
+function viewPlanos(){
+  return '<div><p class="eyebrow">Para o dono da escola</p><h1>Quanto dinheiro está parado com atraso?</h1></div>'
+   +'<div class="card"><div class="grid2"><label>Nº de alunos<input class="field num" id="cAlunos" type="number" min="1" value="80" inputmode="numeric"></label>'
+   +'<label>Mensalidade (R$)<input class="field num" id="cValor" type="number" min="1" value="150" inputmode="decimal"></label></div>'
+   +'<label>Quantos atrasam por mês (%)<input class="field num" id="cPct" type="number" min="0" max="100" value="20" inputmode="numeric"></label>'
+   +'<div><p class="eyebrow">Dinheiro atrasado todo mês</p><div class="calc-out num" id="cOut"></div><p class="sub" id="cSub"></p></div></div>'
+   +'<div class="plans">'
+   +plan("Inicial","39",["Até 30 alunos","Cobrança no WhatsApp com Pix pronto","Painel de quem pagou e quem deve"],false)
+   +plan("Escola","69",["Até 100 alunos","Lembrete automático de vencimento e de atraso","Baixa automática do Pix pelo Mercado Pago","Recibo automático para o responsável"],true)
+   +plan("Rede","119",["Alunos ilimitados","Várias unidades e turmas","Relatório do mês para o dono"],false)
+   +'</div><p class="note"><b>1º mês grátis.</b> Sem fidelidade: cancela quando quiser. A gente cadastra seus alunos para você.</p>';
+}
+function plan(n,p,itens,star){return '<div class="plan'+(star?" star":"")+'"><div class="plan-top"><h2>'+n+'</h2>'+(star?'<span class="badge">Mais escolhido</span>':'')+'</div><div class="price num">R$ '+p+'<small> /mês</small></div><ul>'+itens.map(function(i){return '<li>'+i+'</li>'}).join("")+'</ul></div>'}
+function calc(){
+  var n=Number((document.getElementById("cAlunos")||{}).value)||0, v=Number((document.getElementById("cValor")||{}).value)||0, p=Number((document.getElementById("cPct")||{}).value)||0;
+  var out=document.getElementById("cOut"); if(!out)return;
+  var parado=n*v*p/100; out.textContent=brl(parado);
+  document.getElementById("cSub").textContent="São cerca de "+Math.round(n*p/100)+" alunos para cobrar um por um, todo mês. Por ano: "+brl(parado*12)+" entrando atrasado.";
+}
+function viewAjustes(){
+  var c=S.config;
+  return '<div><h1>Ajustes</h1><p class="sub">Dados da escola e textos das mensagens.</p></div>'
+   +'<form id="fCfg" class="card"><h2>Escola e Pix</h2>'
+   +'<label>Nome da escola<input class="field" id="cfgEscola" value="'+esc(c.escola)+'" required></label>'
+   +'<div class="grid2"><label>Nome no Pix<input class="field" id="cfgRecebedor" value="'+esc(c.recebedor)+'"></label><label>Cidade<input class="field" id="cfgCidade" value="'+esc(c.cidade)+'"></label></div>'
+   +'<label>Chave Pix<input class="field" id="cfgChave" value="'+esc(c.chave)+'" required><span class="hint">E-mail, CPF/CNPJ (só números), chave aleatória ou celular no formato +5511999998888.</span></label>'
+   +'<h2>Mensagens</h2><p class="note">Use <b>{responsavel}</b>, <b>{aluno}</b>, <b>{escola}</b>, <b>{mes}</b>, <b>{valor}</b>, <b>{vencimento}</b> e <b>{pix}</b>. Eles são trocados pelos dados de cada aluno.</p>'
+   +'<label>Cobrança (antes de vencer)<textarea class="field" id="cfgCobranca">'+esc(c.modelos.cobranca)+'</textarea></label>'
+   +'<label>Cobrança de atraso<textarea class="field" id="cfgAtraso">'+esc(c.modelos.atraso)+'</textarea></label>'
+   +'<label>Recibo (pagamento confirmado)<textarea class="field" id="cfgRecibo">'+esc(c.modelos.recibo)+'</textarea></label>'
+   +'<button class="btn primary" type="submit">Salvar ajustes</button></form>'
+   +'<div class="card"><h2>Mercado Pago</h2><p class="note"><b>Modo demonstração.</b> Aqui o pagamento é confirmado no botão “Simular pagamento”. Na versão contratada, a conta Mercado Pago da escola é conectada e o Pix é confirmado sozinho, com recibo automático.</p></div>'
+   +'<div class="card"><h2>Dados de exemplo</h2><p class="sub">Volta para os alunos e valores de exemplo. Seus ajustes e alunos cadastrados aqui serão apagados.</p><div id="resetBox"><button class="btn danger" data-act="reset">Restaurar exemplo</button></div></div>';
+}
+function render(){
+  document.getElementById("escolaNome").textContent=S.config.escola;
+  renderTabs();
+  var v={painel:viewPainel,alunos:viewAlunos,envios:viewEnvios,planos:viewPlanos,ajustes:viewAjustes}[UI.tab]||viewPainel;
+  $view.innerHTML=v();
+  if(UI.tab==="planos") calc();
+}
+
+/* ---------- folhas ---------- */
+var $sheet=document.getElementById("sheetRoot");
+function openSheet(html){$sheet.innerHTML='<div class="sheet-bg" data-close="1"><div class="sheet" role="dialog" aria-modal="true">'+html+'</div></div>';var f=$sheet.querySelector("input,button:not(.x)");if(f&&f.tagName==="INPUT")f.focus()}
+function closeSheet(){$sheet.innerHTML=""}
+function toast(msg){var r=document.getElementById("toastRoot");r.innerHTML='<div class="toast" role="status">'+esc(msg)+'</div>';clearTimeout(toast.t);toast.t=setTimeout(function(){r.innerHTML=""},3200)}
+function head(t,s){return '<div class="sheet-head"><div><h2>'+t+'</h2>'+(s?'<p class="sub">'+s+'</p>':'')+'</div><button class="x" data-close="1" aria-label="Fechar">×</button></div>'}
+
+function bubbleHtml(texto,pix){
+  var e=esc(texto); if(pix) e=e.replace(esc(pix),'<span class="pix">'+esc(pix)+'</span>'); return '<div class="bubble">'+e+'</div>';
+}
+function cobrarSheet(a,fila){
+  var s=status(a), modelo=s.k==="atrasado"?S.config.modelos.atraso:S.config.modelos.cobranca, texto=preenche(modelo,a), pix=pixDe(a);
+  var titulo=fila?("Cobrança "+(fila.i+1)+" de "+fila.ids.length):"Cobrar "+esc(primeiroNome(a.nome));
+  openSheet(head(titulo,esc(a.nome)+' · <span class="num">'+brl(a.valor)+'</span> · '+esc(s.t))
+    +'<div class="chat"><div class="chat-to">Para '+esc(a.responsavel)+' · '+esc(a.whats)+'</div>'+bubbleHtml(texto,pix)+'</div>'
+    +'<div class="qrbox"><div class="qr" id="qr" aria-label="QR code do Pix"></div><p>O responsável pode pagar pelo <b>QR code</b> ou pelo <b>Pix copia e cola</b> da mensagem. Valor de <b class="num">'+brl(a.valor)+'</b> já preenchido.</p></div>'
+    +'<div class="actions"><a class="btn wa block" href="'+esc(waLink(a,texto))+'" target="_blank" rel="noopener" data-act="enviou" data-id="'+a.id+'">'+ICON.wa+' Abrir no WhatsApp</a>'
+    +'<div class="actions two"><button class="btn ghost" data-act="copiar" data-id="'+a.id+'">Copiar mensagem</button><button class="btn ghost" data-act="simular" data-id="'+a.id+'">Simular pagamento</button></div>'
+    +(fila?'<button class="btn primary" data-act="proximo">'+(fila.i+1<fila.ids.length?"Próximo aluno →":"Concluir")+'</button>':'')
+    +'</div><p class="note"><b>Na versão contratada</b> essas mensagens saem sozinhas no dia do vencimento e nos dias de atraso, sem você abrir nada.</p>');
+  UI.fila=fila||null; UI.atual=a.id; UI.texto=texto;
+  var el=document.getElementById("qr");
+  try{ if(window.QRCode) new QRCode(el,{text:pix,width:120,height:120,correctLevel:QRCode.CorrectLevel.M}); else el.textContent="QR indisponível"; }catch(e){el.textContent="QR indisponível"}
+}
+function alunoSheet(a){
+  var s=status(a), pago=s.k==="pago";
+  openSheet(head(esc(a.nome),esc(a.turma)+' · resp. '+esc(a.responsavel))
+    +'<div class="tiles"><div class="tile"><b class="num">'+brl(a.valor)+'</b><span>mensalidade</span></div><div class="tile"><b class="num">dia '+venc(a)+'</b><span>vencimento</span></div><div class="tile '+(pago?"ok":s.k==="atrasado"?"bad":"warn")+'"><b>'+(pago?"Pago":s.k==="atrasado"?"Atraso":"Aberto")+'</b><span>'+mesNome()+'</span></div></div>'
+    +'<p class="note">WhatsApp do responsável: <b class="num">'+esc(a.whats)+'</b>'+(pago?'<br>Pago em '+hora(a.pagamentos[mesKey()].em)+' via '+esc(a.pagamentos[mesKey()].via):'')+'</p>'
+    +'<div class="actions">'+(pago?'<button class="btn ghost" data-act="desfazer" data-id="'+a.id+'">Desfazer pagamento</button>':'<button class="btn wa" data-act="cobrar" data-id="'+a.id+'">'+ICON.wa+' Cobrar no WhatsApp</button><button class="btn ghost" data-act="pagoManual" data-id="'+a.id+'">Recebi em dinheiro</button>')
+    +'<div class="actions two"><button class="btn ghost" data-act="editar" data-id="'+a.id+'">Editar</button><span id="delBox"><button class="btn danger block" data-act="excluir" data-id="'+a.id+'">Excluir</button></span></div></div>');
+}
+function formSheet(a){
+  var n=!a; a=a||{nome:"",responsavel:"",whats:"",turma:"",valor:"",dia:10};
+  openSheet(head(n?"Novo aluno":"Editar aluno","")
+    +'<form id="fAluno" data-id="'+(a.id||"")+'"><label>Nome do aluno<input class="field" id="fNome" required value="'+esc(a.nome)+'"></label>'
+    +'<label>Responsável<input class="field" id="fResp" required value="'+esc(a.responsavel)+'"></label>'
+    +'<label>WhatsApp do responsável<input class="field num" id="fWhats" required inputmode="tel" placeholder="(11) 99999-8888" value="'+esc(a.whats)+'"><span class="hint">Dica para a demonstração: coloque o seu número e mostre a mensagem chegando.</span></label>'
+    +'<div class="grid2"><label>Turma<input class="field" id="fTurma" placeholder="Sub-9" value="'+esc(a.turma)+'"></label><label>Mensalidade (R$)<input class="field num" id="fValor" type="number" min="1" step="0.01" required inputmode="decimal" value="'+esc(a.valor)+'"></label></div>'
+    +'<label>Dia do vencimento<input class="field num" id="fDia" type="number" min="1" max="31" required inputmode="numeric" value="'+esc(a.dia)+'"></label>'
+    +'<button class="btn primary" type="submit">'+(n?"Cadastrar aluno":"Salvar")+'</button></form>');
+}
+function byId(id){for(var i=0;i<S.alunos.length;i++)if(S.alunos[i].id===id)return S.alunos[i];return null}
+function registra(tipo,a,txt){S.log.unshift({ts:Date.now(),tipo:tipo,aluno:a.nome,txt:txt});S.log=S.log.slice(0,200)}
+function pagar(a,via){a.pagamentos=a.pagamentos||{};a.pagamentos[mesKey()]={em:Date.now(),via:via};registra("recibo",a,"Recibo enviado · "+brl(a.valor));save()}
+function copiar(texto,ok){
+  function fallback(){var t=document.createElement("textarea");t.value=texto;t.style.position="fixed";t.style.opacity="0";document.body.appendChild(t);t.select();try{document.execCommand("copy");ok()}catch(e){toast("Não deu para copiar. Selecione o texto e copie.")}t.remove()}
+  try{navigator.clipboard.writeText(texto).then(ok,fallback)}catch(e){fallback()}
+}
+
+/* ---------- eventos ---------- */
+document.addEventListener("click",function(e){
+  var el=e.target.closest("[data-tab],[data-aluno],[data-filtro],[data-act],[data-close]"); if(!el)return;
+  if(el.dataset.close&&e.target!==el&&!e.target.closest(".x"))return;
+  if(el.dataset.close){closeSheet();return}
+  if(el.dataset.tab){UI.tab=el.dataset.tab;try{localStorage.setItem(KEY+":tab",UI.tab)}catch(x){}render();window.scrollTo(0,0);return}
+  if(el.dataset.aluno){alunoSheet(byId(el.dataset.aluno));return}
+  if(el.dataset.filtro){UI.filtro=el.dataset.filtro;render();return}
+  var act=el.dataset.act, a=el.dataset.id?byId(el.dataset.id):null;
+  if(act==="novo")formSheet();
+  else if(act==="editar")formSheet(a);
+  else if(act==="cobrar")cobrarSheet(a);
+  else if(act==="lote"){var ids=S.alunos.filter(function(x){return status(x).k==="atrasado"}).sort(function(x,y){return status(y).dias-status(x).dias}).map(function(x){return x.id});if(ids.length)cobrarSheet(byId(ids[0]),{ids:ids,i:0})}
+  else if(act==="proximo"){var f=UI.fila;if(f&&f.i+1<f.ids.length){f.i++;cobrarSheet(byId(f.ids[f.i]),f)}else{closeSheet();render();toast("Cobranças concluídas.")}}
+  else if(act==="enviou"){registra("cobranca",a,status(a).k==="atrasado"?"Cobrança de atraso enviada":"Cobrança enviada");save()}
+  else if(act==="copiar"){copiar(UI.texto,function(){registra("cobranca",a,"Cobrança copiada");save();toast("Mensagem copiada. Cole no WhatsApp do responsável.")})}
+  else if(act==="simular"){pagar(a,"Pix · Mercado Pago");var f2=UI.fila;closeSheet();render();toast("Pix de "+brl(a.valor)+" recebido de "+primeiroNome(a.responsavel)+". Baixa feita e recibo enviado.");
+    if(f2){f2.ids=f2.ids.filter(function(id){return id!==a.id});if(f2.ids.length){f2.i=Math.min(f2.i,f2.ids.length-1);setTimeout(function(){cobrarSheet(byId(f2.ids[f2.i]),f2)},900)}}}
+  else if(act==="pagoManual"){pagar(a,"dinheiro");closeSheet();render();toast("Pagamento de "+primeiroNome(a.nome)+" registrado.")}
+  else if(act==="desfazer"){delete a.pagamentos[mesKey()];save();closeSheet();render();toast("Pagamento desfeito.")}
+  else if(act==="excluir"){document.getElementById("delBox").innerHTML='<button class="btn danger block" data-act="excluirOk" data-id="'+a.id+'">Confirmar exclusão</button>'}
+  else if(act==="excluirOk"){S.alunos=S.alunos.filter(function(x){return x.id!==a.id});save();closeSheet();render();toast("Aluno excluído.")}
+  else if(act==="reset"){document.getElementById("resetBox").innerHTML='<div class="actions two"><button class="btn ghost" data-act="resetNo">Cancelar</button><button class="btn danger" data-act="resetOk">Apagar e restaurar</button></div>'}
+  else if(act==="resetNo"){render()}
+  else if(act==="resetOk"){S=seed();save();UI.tab="painel";render();toast("Exemplo restaurado.")}
+});
+document.addEventListener("input",function(e){
+  if(e.target.id==="busca"){UI.busca=e.target.value;var pos=e.target.selectionStart;render();var b=document.getElementById("busca");b.focus();try{b.setSelectionRange(pos,pos)}catch(x){}}
+  if(/^c(Alunos|Valor|Pct)$/.test(e.target.id))calc();
+});
+document.addEventListener("submit",function(e){
+  e.preventDefault();
+  if(e.target.id==="fAluno"){
+    var id=e.target.dataset.id, a=id?byId(id):{id:uid(),pagamentos:{}};
+    a.nome=document.getElementById("fNome").value.trim();a.responsavel=document.getElementById("fResp").value.trim();
+    a.whats=document.getElementById("fWhats").value.trim();a.turma=document.getElementById("fTurma").value.trim()||"Geral";
+    a.valor=Number(document.getElementById("fValor").value);a.dia=Math.max(1,Math.min(31,Number(document.getElementById("fDia").value)||10));
+    if(!id)S.alunos.push(a); save(); closeSheet(); render(); toast(id?"Aluno atualizado.":a.nome+" cadastrado.");
+  }
+  if(e.target.id==="fCfg"){
+    var c=S.config;c.escola=document.getElementById("cfgEscola").value.trim()||c.escola;c.recebedor=document.getElementById("cfgRecebedor").value.trim();
+    c.cidade=document.getElementById("cfgCidade").value.trim();c.chave=document.getElementById("cfgChave").value.trim()||c.chave;
+    c.modelos={cobranca:document.getElementById("cfgCobranca").value,atraso:document.getElementById("cfgAtraso").value,recibo:document.getElementById("cfgRecibo").value};
+    save();render();toast("Ajustes salvos.");
+  }
+});
+document.addEventListener("keydown",function(e){if(e.key==="Escape"&&$sheet.innerHTML)closeSheet()});
+render();
+})();
+</script>
