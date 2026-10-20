@@ -86,3 +86,13 @@ revoke execute on function public.protege_plano() from anon, authenticated, publ
 revoke execute on function public.srv_mp_token(text,uuid), public.srv_marcar_paga(text,uuid,text), public.srv_set_mp_payment(text,uuid,text), public.srv_set_plano(text,uuid,text,text) from authenticated;
 -- Ficam públicos de propósito: pagamento_publico (só dados mínimos, por token de 24 caracteres)
 -- e srv_* (exigem SERVER_SECRET; o banco guarda só o hash).
+
+-- 0004: o servidor também pode se identificar com a chave secreta do Supabase (role service_role),
+-- configurada no Vercel como SUPABASE_SECRET_KEY. O SERVER_SECRET continua aceito.
+create or replace function privado.ok(p_secret text) returns boolean
+language sql stable security definer set search_path = privado, extensions as $$
+  select auth.role() = 'service_role'
+      or exists(select 1 from privado.config where secret_hash = encode(extensions.digest(coalesce(p_secret,''), 'sha256'), 'hex'));
+$$;
+grant execute on function public.srv_mp_token(text,uuid), public.srv_marcar_paga(text,uuid,text), public.srv_set_mp_payment(text,uuid,text), public.srv_set_plano(text,uuid,text,text) to service_role;
+grant execute on function public.pagamento_publico(text) to service_role;
